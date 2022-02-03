@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>progress bar</title>
+</head>
+<style>
+    .btn {
+        border: 2px solid navy;
+        width: 200px;
+        height: 30px;
+    }
+    
+    .progress-bar {
+        margin-top: 15px;
+        border: 2px solid navy;
+        /* background: rgb(99, 145, 206); */
+        width: 220px;
+        height: 35px;
+    }
+    
+    .progress-bar-fill {
+        padding-left: 10px;
+        width: 0%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        background-color: palegreen;
+    }
+</style>
+
+<body>
+    <form action="" class="form" id="uplodeform">
+        <input type="file" name="inpfile" id="inpfile"><br><br>
+        <input type="submit" value="uplode" class="btn">
+    </form>
+    <div class="progress-bar" id="progressbar">
+        <div class="progress-bar-fill">
+            <span class="progress-bar-text">0%</span>
+        </div>
+    </div>
+    <script>
+        const uplodeform = document.getElementById('uplodeform');
+        const inpfile = document.getElementById('inpfile');
+        const progressbarfill = document.querySelector('#progressbar > .progress-bar-fill');
+        const progressbartest = progressbarfill.querySelector('.progress-bar-text');
+
+        uplodeform.addEventListener('submit', uplodefile);
+
+        function uplodefile(e) {
+            e.preventDefault();
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", 'uplode.php');
+            xhr.upload.addEventListener('progress', e => {
+                const percent = e.lengthComputable ? (e.loaded / e.total) * 100 : 0;
+                progressbarfill.style.width = percent.toFixed(2) + '%';
+                progressbartest.textContent = percent.toFixed(2) + '%';
+            });
+
+            xhr.setRequestHeader('Content-Type', "multipart/form-data");
+            xhr.send(new FormData(uplodeform));
+        }
+    </script>
+</body>
+
+</html>
